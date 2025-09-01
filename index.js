@@ -22,17 +22,20 @@ app.all("*", async (req, res, next) => {
 	<html>
 		<head>
     		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<meta name="viewport" content="width=device-width" initial-scale="1"/>
      		<title>Location: ${reqUrl}</title>
 		</head>
 		<body>
 			<h4>Location: ${reqUrl}</h4><hr/>
 			${reqUrl != "/" ? `<a href="../">../</a><br/>` : ""}
 			${dir.length == 0 ? "<p>This dir is empty.</p>" : ""}
-			${(() => {
+			${await (async () => {
 				let list = "";
 				for (var name of dir) {
-					list += `<a href="./${name}">${name}</a><br/>`;
+					list += `<a href="./${name}" ${
+						(await isDir(join("pages", reqUrl, name)))
+							? ""
+							: `target="_blank"`
+					}>${name}</a><br/>`;
 				}
 				return list;
 			})()}

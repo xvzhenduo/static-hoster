@@ -1,4 +1,4 @@
-import { lstat, readdir } from "fs/promises";
+import { lstat } from "fs/promises";
 
 export async function isDir(path) {
 	const stat = await lstat(path);
