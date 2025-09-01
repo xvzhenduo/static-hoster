@@ -22,6 +22,7 @@ app.all("*", async (req, res, next) => {
 	<html>
 		<head>
     		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<meta name="viewport" content="width=device-width" initial-scale="1"/>
      		<title>Location: ${reqUrl}</title>
 		</head>
 		<body>
