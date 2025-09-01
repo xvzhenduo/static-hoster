@@ -8,24 +8,36 @@ const app = express();
 app.use(express.static("pages"));
 
 app.all("*", async (req, res, next) => {
+	let reqUrl = decodeURI(req.url);
 	try {
-		await isDir(join("pages", req.url));
+		await isDir(join("pages", reqUrl));
 	} catch (e) {
+		console.log(e);
 		next();
 		return;
 	}
-	var dir = await readdir(join("pages", req.url));
-	var result = "<!DOCTYPE html>";
-	result += `<h4>Location: ${req.url}</h4><hr/>`;
-	if (req.url != "/") {
-		result += `<a href="../">../</a><br/>`;
-	}
-	if (dir.length == 0) {
-		result += "<p>This dir is empty.</p>";
-	}
-	for (var name of dir) {
-		result += `<a href="./${name}">${name}</a><br/>`;
-	}
+	var dir = await readdir(join("pages", reqUrl));
+	var result = `
+	<!DOCTYPE html>
+	<html>
+		<head>
+    		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     		<title>Location: ${reqUrl}</title>
+		</head>
+		<body>
+			<h4>Location: ${reqUrl}</h4><hr/>
+			${reqUrl != "/" ? `<a href="../">../</a><br/>` : ""}
+			${dir.length == 0 ? "<p>This dir is empty.</p>" : ""}
+			${(() => {
+				let list = "";
+				for (var name of dir) {
+					list += `<a href="./${name}">${name}</a><br/>`;
+				}
+				return list;
+			})()}
+		</body>
+	</html>
+	`;
 	res.end(result);
 });
 
