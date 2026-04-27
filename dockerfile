@@ -1,10 +1,10 @@
-FROM node:20
+FROM node:node:20-alpine
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN npm install && npm cache clean --force
 
 EXPOSE 3000
 
